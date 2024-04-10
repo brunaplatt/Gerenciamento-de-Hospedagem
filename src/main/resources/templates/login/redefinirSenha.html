@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head th:replace="~{head}"></head>
+<body>
+<div class="barra_menu">
+    <div class="menu_titulo"><h2>Pousada Quinta do Ypuã</h2></div>
+</div>
+    <div class="reset-senha">
+        <h2>Redefinir Senha</h2>
+        <label for="new-password">Nova Senha:</label><br>
+        <input type="password" id="new-password" name="new-password" placeholder="Digite a nova senha"><br>
+
+        <label for="confirm-password">Confirme a Senha:</label><br>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirme a nova senha"><br>
+
+        <button id="btnConfSenha" onclick="resetPassword(); senhaConfirmada()">Redefinir Senha</button>
+    </div>
+
+    <script src=../static/script.js></script>
+</body>
+</html>
