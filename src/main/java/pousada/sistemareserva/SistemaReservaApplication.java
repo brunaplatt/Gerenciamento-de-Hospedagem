@@ -1,4 +1,4 @@
-package com.pousada.sistemareserva;
+package pousada.sistemareserva;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

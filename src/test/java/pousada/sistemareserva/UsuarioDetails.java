@@ -1,4 +1,4 @@
-package com.pousada.sistemareserva;
+package pousada.sistemareserva;
 
 public interface UsuarioDetails {
 }
