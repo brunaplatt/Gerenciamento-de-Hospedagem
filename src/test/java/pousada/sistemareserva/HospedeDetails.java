@@ -1,4 +1,4 @@
 package pousada.sistemareserva;
 
-public interface UsuarioDetails {
+public interface HospedeDetails {
 }
