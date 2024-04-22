@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="cadastro-usuario">
+        <h2>Gerenciar Usuários</h2>
+        <form action="/editar" method="post">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" value="Usuário Exemplo" required>
+    
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="exemplo@dominio.com" required>
+    
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+    
+            <label for="tokenResetSenha">Token de Redefinição de Senha:</label>
+            <input type="text" id="tokenResetSenha" name="tokenResetSenha">
+    
+            <button type="submit">Salvar Alterações</button>
+        </form>
+    
+        <form action="/desativar" method="post">
+            <button class="btn-danger" type="submit">Desativar Usuário</button>
+        </form>
+    </div>
+</body>
+</html>

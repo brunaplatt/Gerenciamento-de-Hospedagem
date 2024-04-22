@@ -61,8 +61,8 @@ input[type="submit"]:hover {
 }
 
 .up {
-    transform: rotate(-135deg);
     -webkit-transform: rotate(-135deg);
+    transform: rotate(-135deg);
 }
 
 .secao {

@@ -53,6 +53,13 @@ public class usuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
+    public void criarUsuarioAdminPadrao() {
+        usuario admin = new usuario();
+        admin.setEmail("admin@quintaypua.com.br");
+        admin.setSenha(passwordEncoder.encode("admin123@")); // Criptografa a senha antes de salvar
+        usuarioRepository.save(admin);
+    }
+
     public boolean autenticar(String email, String senha) {
         usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario != null) {
