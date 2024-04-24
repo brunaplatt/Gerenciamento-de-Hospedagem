@@ -1,10 +1,10 @@
-package pousada.sistemareserva;
+package com.gerenciamento.gerenciamento;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SistemaReservaApplicationTests {
+class GerenciamentoApplicationTests {
 
 	@Test
 	void contextLoads() {

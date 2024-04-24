@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head th:replace="~{head}"></head>
+<body>
+    <header th:replace="~{header}"></header>
+    <div class="container">
+        <div class="col-12  py-md-5 bd-content">
+            <h3 class="bd-title" id="content">Listar reservas</h3>
+            <div class="br-pagebody">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-tools" style="float:left">
+    
+                            <a style="margin:5px" class="btn btn-success" th:href="@{/reservas/adicionar}" type="button">Inserir</a>
+    
+                        </div>
+                    </div>
+                    <div class="bd  bd-gray-300 rounded">
+                        <div class="table-responsive">
+                            <table class="table mg-b-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Responsavel</th>
+                                        <th scope="col">Data entrada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="reserva : ${listaReserva}">
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" th:href="@{'/reservas/atualizar/'+${reserva.id}}">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-sm button-alert" th:href="@{'/reservas/excluir/'+${reserva.id}}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                        <th scope="row" th:text="${reserva.responsavel}"></th>
+                                        <td th:text="${reserva.checkIn}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
