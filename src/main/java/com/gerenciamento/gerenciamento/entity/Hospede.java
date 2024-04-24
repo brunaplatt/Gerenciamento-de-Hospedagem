@@ -1,4 +1,4 @@
-package pousada.sistemareserva.entity;
+package com.gerenciamento.gerenciamento.entity;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class hospede {
+public class Hospede {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -24,7 +24,7 @@ public class hospede {
 
     @Email(message = "O e-mail do hóspede deve ser válido")
     private String email;
-    public hospede(){
+    public Hospede(){
     }
 
     public long getId() {
