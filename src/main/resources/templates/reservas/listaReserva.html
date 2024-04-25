@@ -23,20 +23,24 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Responsavel</th>
                                         <th scope="col">Data entrada</th>
+                                        <th scope="col">Data saída</th>
+                                        <th scope="col">Acomodação</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="reserva : ${listaReserva}">
                                         <td>
-                                            <a class="btn btn-primary btn-sm" th:href="@{'/reservas/atualizar/'+${reserva.id}}">
+                                            <a class="btn btn-primary btn-sm" th:href="@{'/reservas/'+${reserva.id}}">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-sm button-alert" th:href="@{'/reservas/excluir/'+${reserva.id}}">
+                                            <a class="btn btn-danger btn-sm button-alert" th:onclick="'excluir(\'' + ${reserva.id} + '\')'">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
-                                        <th scope="row" th:text="${reserva.nome}"></th>
+                                        <th scope="row" th:text="${reserva.nomeResponsavel}"></th>
                                         <td th:text="${reserva.checkIn}"></td>
+                                        <td th:text="${reserva.checkOut}"></td>
+                                        <td th:text="${reserva.acomodacao}" name="acomodacao"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -46,6 +50,66 @@
             </div>
         </div>
     </div>
-    
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="conteudo">
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="javascript:location.reload();">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+<script>
+    function excluir(id){
+        $.ajax({
+                url: '/reservas/excluir/'+id,
+                type: 'DELETE',
+                success: function(data) {
+                    console.log("Deu certo")
+                    console.log(data)
+                    $('#myModal').modal('show')
+                    $("#conteudo").html(data.Message)
+                },
+                error: function(error){
+                    $('#myModal').modal('show')
+                    const result = JSON.parse(error.responseText);
+                    console.log(result)
+                    $("#conteudo").html(result.Message)
+                }
+        });
+    }
+    $(document).ready(function(){
+        $("[name=acomodacao]").each(function(index, element){
+            if (element.innerHTML != undefined || element.innerHTML != '' || element.innerHTML > 0){
+                switch (element.innerHTML){
+                    case 1:
+                        element.innerHTML = "Single (1 cama solteiro)";
+                        break;
+                    case 1:
+                        element.innerHTML = "Double (2 camas solteiro)";
+                        break;
+                    case 1:
+                        element.innerHTML = "Standard (1 cama casal)";
+                        break;
+                    default:
+                        element.innerHTML = "Desluxe (1 cama casal com hidromassagem)";
+                        break;
+                }
+            }
+        });
+    })
+</script>
 </body>
 </html>

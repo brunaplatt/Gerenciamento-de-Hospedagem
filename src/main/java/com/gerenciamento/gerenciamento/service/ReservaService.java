@@ -31,19 +31,24 @@ public class ReservaService {
         reservaRepository.deleteById(id);
     }
 
-    public List<Reserva> listarReservas() {
+    public List<Object[]> listarReservas() {
         return reservaRepository.listaReservas();
     }
 
-    public Optional<Reserva> buscarPorId(Long id) {
-        return reservaRepository.findById(id);
+    public Reserva buscarPorId(Long id) {
+        return reservaRepository.findById(id).get();
     }
 
     public List<Reserva> buscarPorResponsavel(long responsavel) {
         return reservaRepository.findByResponsavel(responsavel);
     }
 
-    public List<Reserva> buscarPorDatas(Date checkIn, Date checkOut){
-        return reservaRepository.buscaPorDatas(checkIn, checkOut);
+    public List<Reserva> buscarPorDatas(Date checkIn, Date checkOut, Integer acomodacao){
+        return reservaRepository.buscaPorDatas(checkIn, checkOut, acomodacao);
+    }
+
+
+    public List<Reserva> buscarPorDatasMenosUm(Date checkIn, Date checkOut, long id, Integer acomodacao){
+        return reservaRepository.buscarPorDatasMenosUm(checkIn, checkOut, id, acomodacao);
     }
 }
