@@ -1,12 +1,16 @@
 package com.gerenciamento.gerenciamento.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gerenciamento.gerenciamento.entity.Reserva;
 import com.gerenciamento.gerenciamento.service.ReservaService;
+import java.util.Map;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,10 +31,31 @@ public class ReservaController {
     }
 
     @PostMapping("/cadastrar")
-    public void cadastrarReserva(@RequestBody Reserva reserva) {
-        reservaService.cadastrarReserva(reserva);
+    public HashMap<String, String> cadastrarReserva(@Validated Reserva reserva, BindingResult result) {
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            List<Reserva> reservasPorData = reservaService.buscarPorDatas(reserva.getCheckIn(), reserva.getCheckOut());
+            String datasReservadas = "";
+            for(Reserva t: reservasPorData) {
+                //aqui você exibe os gets
+                // a partir da variavel t
+                datasReservadas += " "+t.getCheckIn() + " à "+t.getCheckOut();
+            }
+            if (datasReservadas.equals("")){
+                reservaService.cadastrarReserva(reserva);
+                map.put("Message", "Inserido com sucesso");
+                map.put("success", "true");
+                return map;
+            }
+            map.put("Message", "As datas: "+datasReservadas+" já estão reservadas");
+            map.put("success", "false");
+        } catch (Error e){
+            map.put("Message", e.getMessage());
+            map.put("success", "false");
+        }
+        return map;
     }
-
+    
     @PutMapping("/atualizar")
     public void atualizarReserva(@RequestBody Reserva reserva) {
         reservaService.atualizarReserva(reserva);
@@ -42,11 +67,9 @@ public class ReservaController {
     }
 
     @GetMapping("/listar")
-    public ModelAndView listarReservas() {
+    public List<Reserva> listarReservas() {
         List<Reserva> listaReserva = reservaService.listarReservas();
-        ModelAndView mv = new ModelAndView("reservas/listaReserva");
-        mv.addObject("listaReserva", listaReserva);
-        return mv;
+        return listaReserva;
     }
 
     @GetMapping("/{id}")

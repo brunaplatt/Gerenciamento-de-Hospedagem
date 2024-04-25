@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.gerenciamento.gerenciamento.entity.Reserva;
 import com.gerenciamento.gerenciamento.repository.ReservaRepository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class ReservaService {
     }
 
     public List<Reserva> listarReservas() {
-        return reservaRepository.findAll();
+        return reservaRepository.listaReservas();
     }
 
     public Optional<Reserva> buscarPorId(Long id) {
@@ -40,5 +41,9 @@ public class ReservaService {
 
     public List<Reserva> buscarPorResponsavel(long responsavel) {
         return reservaRepository.findByResponsavel(responsavel);
+    }
+
+    public List<Reserva> buscarPorDatas(Date checkIn, Date checkOut){
+        return reservaRepository.buscaPorDatas(checkIn, checkOut);
     }
 }

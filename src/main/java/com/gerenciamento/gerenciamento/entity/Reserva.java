@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import javax.validation.constraints.NotBlank;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,11 +17,13 @@ public class Reserva {
     private long id;
 
     @NotBlank(message = "A quantidade de adultos é obrigatória")
-    private Number adultos;
+    private Integer adultos;
 
-    private Number criancas;
+    @Column
+    private Integer criancas;
    
-    private Number condicaoPagamento;
+    @Column
+    private Integer condicaoPagamento;
 
     @NotBlank(message = "O responsável é obrigatório")
     private long responsavel;
@@ -34,7 +37,7 @@ public class Reserva {
     private Boolean cafeIncluso;
 
     @NotBlank(message = "O tipo de acomodação é obrigatório")
-    private Number acomodacao;
+    private Integer acomodacao;
     
     public Reserva(){
     }
@@ -47,27 +50,27 @@ public class Reserva {
         this.id = id;
     }
 
-    public Number getAdultos() {
+    public Integer getAdultos() {
         return adultos;
     }
 
-    public void setAdultos(Number adultos) {
+    public void setAdultos(Integer adultos) {
         this.adultos = adultos;
     }
 
-    public Number getCriancas() {
+    public Integer getCriancas() {
         return criancas;
     }
 
-    public void setCriancas(Number criancas) {
+    public void setCriancas(Integer criancas) {
         this.criancas = criancas;
     }
 
-    public Number getCondicaoPagamento() {
+    public Integer getCondicaoPagamento() {
         return condicaoPagamento;
     }
 
-    public void setCondicaoPagamento(Number condicaoPagamento) {
+    public void setCondicaoPagamento(Integer condicaoPagamento) {
         this.condicaoPagamento = condicaoPagamento;
     }
 
@@ -97,11 +100,11 @@ public class Reserva {
         this.checkOut = checkOut;
     }
 
-    public Number getAcomodacao() {
+    public Integer getAcomodacao() {
         return acomodacao;
     }
 
-    public void setAcomodacao(Number acomodacao) {
+    public void setAcomodacao(Integer acomodacao) {
         this.acomodacao = acomodacao;
     }
 
