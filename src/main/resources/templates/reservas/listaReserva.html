@@ -69,7 +69,7 @@
           </div>
         </div>
       </div>
-      
+
 
 <script>
     function excluir(id){
@@ -90,26 +90,53 @@
                 }
         });
     }
+    // Douglas Pereira 10/06/2024 - Inicio
+    // $(document).ready(function(){
+    //     $("[name=acomodacao]").each(function(index, element){
+    //         if (element.innerHTML != undefined || element.innerHTML != '' || element.innerHTML > 0){
+    //             switch (element.innerHTML){
+    //                 case 1:
+    //                     element.innerHTML = "Single (1 cama solteiro)";
+    //                     break;
+    //                 case 1:
+    //                     element.innerHTML = "Double (2 camas solteiro)";
+    //                     break;
+    //                 case 1:
+    //                     element.innerHTML = "Standard (1 cama casal)";
+    //                     break;
+    //                 default:
+    //                     element.innerHTML = "Desluxe (1 cama casal com hidromassagem)";
+    //                     break;
+    //             }
+    //         }
+    //     });
+    // })
+
     $(document).ready(function(){
         $("[name=acomodacao]").each(function(index, element){
-            if (element.innerHTML != undefined || element.innerHTML != '' || element.innerHTML > 0){
-                switch (element.innerHTML){
+            var acomodacaoValue = parseInt(element.innerHTML);
+            if (!isNaN(acomodacaoValue) && acomodacaoValue > 0){
+                switch (acomodacaoValue){
                     case 1:
                         element.innerHTML = "Single (1 cama solteiro)";
                         break;
-                    case 1:
+                    case 2:
                         element.innerHTML = "Double (2 camas solteiro)";
                         break;
-                    case 1:
+                    case 3:
                         element.innerHTML = "Standard (1 cama casal)";
                         break;
+                    case 4:
+                        element.innerHTML = "Deluxe (1 cama casal com hidromassagem)";
+                        break;
                     default:
-                        element.innerHTML = "Desluxe (1 cama casal com hidromassagem)";
+                        element.innerHTML = "Desconhecido";
                         break;
                 }
             }
         });
-    })
+    });
+    // Douglas Pereira 10/06/2024 - Fim
 </script>
 </body>
 </html>

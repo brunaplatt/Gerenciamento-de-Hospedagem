@@ -26,24 +26,47 @@ public class ReservaController {
     public void ReservasController(ReservaService reservaService) {
         this.reservaService = reservaService;
     }
+    // Douglas Pereira 09/06/2024 - Inicio
+    // @GetMapping("/listar")
+    // public ModelAndView listarReservas() {
+    //     List<Object[]> resultados = reservaService.listarReservas();
+    //     List<Object> lista = new ArrayList<>();
+    //     for(Object[] obj : resultados) {
+    //         Map<String, Object> reserva = new HashMap<>();
+    //         reserva.put("id", obj[0]);
+    //         reserva.put("nomeResponsavel", obj[10]);
+    //         reserva.put("checkIn", obj[4]);
+    //         reserva.put("checkOut", obj[5]);
+    //         reserva.put("acomodacao", obj[1]);
+    //         lista.add(reserva);
+    //     }
+    //     ModelAndView mv = new ModelAndView("reservas/listaReserva");
+    //     mv.addObject("listaReserva", lista);
+    //     return mv;
+    // }
 
     @GetMapping("/listar")
     public ModelAndView listarReservas() {
         List<Object[]> resultados = reservaService.listarReservas();
-        List<Object> lista = new ArrayList<>();
-        for(Object[] obj : resultados) {
+        List<Map<String, Object>> lista = new ArrayList<>();
+        for (Object[] obj : resultados) {
+            if (obj.length < 5) {
+                System.out.println("Aviso: Objeto reserva com menos de 5 elementos encontrado.");
+                continue;
+            }
             Map<String, Object> reserva = new HashMap<>();
             reserva.put("id", obj[0]);
-            reserva.put("nomeResponsavel", obj[10]);
+            reserva.put("acomodacao", obj[1]);
             reserva.put("checkIn", obj[4]);
             reserva.put("checkOut", obj[5]);
-            reserva.put("acomodacao", obj[1]);
+            reserva.put("nomeResponsavel", obj[9]);
             lista.add(reserva);
         }
         ModelAndView mv = new ModelAndView("reservas/listaReserva");
         mv.addObject("listaReserva", lista);
         return mv;
     }
+    // Douglas Pereira 09/06/2024 - Fim
 
     @GetMapping("/adicionar")
     public ModelAndView adicionar() {
