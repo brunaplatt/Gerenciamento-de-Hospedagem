@@ -1,29 +1,94 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head th:replace="~{head}"></head>
+<head th:replace="~{head}"></head>
 <body>
     <header th:replace="~{header}"></header>
-    <div class="cadastro">
-        <h2>Gerenciar Hóspedes</h2>
-        <form action="/editar" method="post">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" value="Usuário Exemplo" required>
-    
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="exemplo@dominio.com" required>
-    
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required>
-    
-            <label for="tokenResetSenha">Token de Redefinição de Senha:</label>
-            <input type="text" id="tokenResetSenha" name="tokenResetSenha">
-    
-            <button type="submit">Salvar Alterações</button>
-        </form>
-    
-        <form action="/desativar" method="post">
-            <button class="btn-danger" type="submit">Desativar Usuário</button>
-        </form>
+    <div class="container">
+        <div class="col-12 py-md-5 bd-content">
+            <h3 class="bd-title" id="content">Cadastrar Hóspede</h3>
+            <div class="br-pagebody">
+                <div class="col-12">
+                    <div class="col-12 alert" style="display: none;"></div>
+                    <form class="card card-default" method="POST" id="cadastrarHospede" enctype="multipart/form-data">
+                        <div class="card-header">
+                            <a style="margin:5px" class="btn btn-default" th:href="@{/hospede/listar}" type="button">Listar</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Nome</label>
+                                        <input type="text" class="form-control" name="nome" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>CPF</label>
+                                        <input type="text" class="form-control" name="cpf" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Telefone</label>
+                                        <input type="text" class="form-control" name="telefone" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>E-mail</label>
+                                        <input type="email" class="form-control" name="email" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button style="margin:5px" class="btn btn-success">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="conteudo">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
+<script th:inline="javascript">
+    $(function() {
+        $("#cadastrarHospede").submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/hospedes/cadastrar',
+                type: 'post',
+                dataType: 'json',
+                data: $("#cadastrarHospede").serialize(),
+                success: function(data) {
+                    $('#myModal').modal('show');
+                    $("#conteudo").html(data.message);
+                },
+                error: function(error) {
+                    $('#myModal').modal('show');
+                    const result = JSON.parse(error.responseText);
+                    $("#conteudo").html(result.message);
+                }
+            });
+        });
+    });
+</script>
 </html>
