@@ -338,3 +338,31 @@ th, td {
     text-align: left;
     padding: 8px;
 }
+
+.background-image {
+    background-image: url('pousada.png'); /* Substitua 'sua-imagem.jpg' pelo caminho da sua imagem */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.overlay {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+.overlay h1 {
+    font-size: 3em;
+}
+.overlay a {
+    margin: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 1.5em;
+}
+.overlay a:hover {
+    text-decoration: underline;
+}

@@ -1,8 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head th:replace="~{head}"></head>
+<html lang="pt-br">
+<head th:replace="~{head}"></head>
 <body>
     <header th:replace="~{header}"></header>
-    TABELA DE HÓSPEDES
+    <div class="container">
+        <div class="col-12 py-md-5 bd-content">
+            <h3 class="bd-title" id="content">Listar Hóspedes</h3>
+            <div class="br-pagebody">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-tools" style="float:left">
+                            <a style="margin:5px" class="btn btn-success" th:href="@{/hospedes/adicionar}" type="button">Inserir</a>
+                        </div>
+                    </div>
+                    <div class="bd bd-gray-300 rounded">
+                        <div class="table-responsive">
+                            <table class="table mg-b-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Ações</th>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">CPF</th>
+                                        <th scope="col">Telefone</th>
+                                        <th scope="col">E-mail</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="hospede : ${listaHospedes}">
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" th:href="@{'/hospedes/editar/' + ${hospede.id}}">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-sm button-alert" th:onclick="'excluir(' + ${hospede.id} + ')'">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                        <td th:text="${hospede.id}"></td>
+                                        <td th:text="${hospede.nome}"></td>
+                                        <td th:text="${hospede.cpf}"></td>
+                                        <td th:text="${hospede.telefone}"></td>
+                                        <td th:text="${hospede.email}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="conteudo">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="javascript:location.reload();">Fechar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <script>
+        function excluir(id) {
+            if(confirm("Você tem certeza que deseja excluir este hóspede?")) {
+                $.ajax({
+                    url: '/hospedes/excluir/' + id,
+                    type: 'DELETE',
+                    success: function(data) {
+                        console.log("Deu certo");
+                        console.log(data);
+                        $('#myModal').modal('show');
+                        $("#conteudo").html(data.message);
+                    },
+                    error: function(error) {
+                        $('#myModal').modal('show');
+                        const result = JSON.parse(error.responseText);
+                        console.log(result);
+                        $("#conteudo").html(result.message);
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
