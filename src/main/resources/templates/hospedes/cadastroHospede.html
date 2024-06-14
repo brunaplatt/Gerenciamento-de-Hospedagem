@@ -89,6 +89,10 @@
                 }
             });
         });
+        // Evento para redirecionar após fechar o modal
+        $('#myModal').on('hidden.bs.modal', function () {
+            window.location.href = '/hospedes/listar';
+        });
     });
 </script>
 </html>

@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gerenciamento.gerenciamento.entity.Hospede;
+import com.gerenciamento.gerenciamento.entity.Reserva;
 import com.gerenciamento.gerenciamento.repository.HospedeRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Comparator;
 
 @Service
 public class HospedeService {
@@ -30,8 +32,14 @@ public class HospedeService {
         hospedeRepository.deleteById(id);
     }
 
+    // public List<Hospede> listarHospedes() {
+    //     return hospedeRepository.findAll();
+    // }
+
     public List<Hospede> listarHospedes() {
-        return hospedeRepository.findAll();
+        List<Hospede> hospedes = hospedeRepository.findAll();
+        hospedes.sort(Comparator.comparing(Hospede::getNome)); // Exemplo de ordenação pelo ID
+        return hospedes;
     }
 
     public Optional<Hospede> buscarPorId(Long id) {

@@ -27,7 +27,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="hospede : ${listaHospedes}">
+                                    <tr th:each="hospede : ${listaHospede}">
                                         <td>
                                             <a class="btn btn-primary btn-sm" th:href="@{'/hospedes/editar/' + ${hospede.id}}">
                                                 <i class="fas fa-pencil-alt"></i>

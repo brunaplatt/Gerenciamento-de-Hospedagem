@@ -9,7 +9,7 @@
             <div class="br-pagebody">
                 <div class="col-12">
                     <div class="col-12 alert" style="display: none;"></div>
-                    <form class="card card-default" method="POST" id="editarHospede" enctype="multipart/form-data">
+                    <form class="card card-default" method="PUT" id="editarHospede" enctype="multipart/form-data">
                         <div class="card-header">
                             <a style="margin:5px" class="btn btn-default" th:href="@{/hospedes/listar}" type="button"></a>
                         </div>
@@ -74,11 +74,18 @@
     $(function() {
         $("#editarHospede").submit(function(e) {
             e.preventDefault();
+
+            var formData = $(this).serializeArray();
+            var dataObject = {};
+            $.each(formData, function(_, kv) {
+                dataObject[kv.name] = kv.value;
+            });
+
             $.ajax({
                 url: '/hospedes/atualizar',
-                type: 'POST',
-                dataType: 'json',
-                data: $("#editarHospede").serialize(),
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(dataObject),
                 success: function(data) {
                     $('#myModal').modal('show');
                     $("#conteudo").html(data.message);
@@ -89,6 +96,11 @@
                     $("#conteudo").html(result.message);
                 }
             });
+        });
+
+        // Evento para redirecionar após fechar o modal
+        $('#myModal').on('hidden.bs.modal', function () {
+            window.location.href = '/hospedes/listar';
         });
     });
 </script>

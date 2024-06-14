@@ -30,7 +30,7 @@
                                 <tbody>
                                     <tr th:each="reserva : ${listaReserva}">
                                         <td>
-                                            <a class="btn btn-primary btn-sm" th:href="@{'/reservas/'+${reserva.id}}">
+                                            <a class="btn btn-primary btn-sm" th:href="@{'/reservas/editar/' +${reserva.id}}">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </a>
                                             <a class="btn btn-danger btn-sm button-alert" th:onclick="'excluir(\'' + ${reserva.id} + '\')'">
@@ -90,27 +90,6 @@
                 }
         });
     }
-    // Douglas Pereira 10/06/2024 - Inicio
-    // $(document).ready(function(){
-    //     $("[name=acomodacao]").each(function(index, element){
-    //         if (element.innerHTML != undefined || element.innerHTML != '' || element.innerHTML > 0){
-    //             switch (element.innerHTML){
-    //                 case 1:
-    //                     element.innerHTML = "Single (1 cama solteiro)";
-    //                     break;
-    //                 case 1:
-    //                     element.innerHTML = "Double (2 camas solteiro)";
-    //                     break;
-    //                 case 1:
-    //                     element.innerHTML = "Standard (1 cama casal)";
-    //                     break;
-    //                 default:
-    //                     element.innerHTML = "Desluxe (1 cama casal com hidromassagem)";
-    //                     break;
-    //             }
-    //         }
-    //     });
-    // })
 
     $(document).ready(function(){
         $("[name=acomodacao]").each(function(index, element){
@@ -136,7 +115,6 @@
             }
         });
     });
-    // Douglas Pereira 10/06/2024 - Fim
 </script>
 </body>
 </html>

@@ -126,9 +126,9 @@
     $("[name=condicaoPagamento]").val(/*[[${reserva.condicaoPagamento}]]*/"").change();
     
     $(function() {
-    $("#editarReserva").submit(function(e) {
-        e.preventDefault();
-        $.ajax({
+        $("#editarReserva").submit(function(e) {
+            e.preventDefault();
+            $.ajax({
                 url: '/reservas/atualizar',
                 type: 'PUT',
                 dataType: 'application/json',
@@ -145,10 +145,13 @@
                     console.log(result)
                     $("#conteudo").html(result.Message)
                 }
+            });
+        });
+        // Evento para redirecionar após fechar o modal
+        $('#myModal').on('hidden.bs.modal', function () {
+            window.location.href = '/reservas/listar';
         });
 
     });
-
-});
 </script>
 </html>

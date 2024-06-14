@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head th:replace="~{head}"></head>
+<head th:replace="~{head}"></head>
 <body>
     <header th:replace="~{header}"></header>
     <div class="container">
-        <div class="col-12  py-md-5 bd-content">
-            <h3 class="bd-title" id="content">Cadastrar reserva</h3>
+        <div class="col-12 py-md-5 bd-content">
+            <h3 class="bd-title" id="content">Cadastrar Reserva</h3>
             <div class="br-pagebody">
                 <div class="col-12">
                     <div class="col-12 alert" style="display: none;"></div>
-                    <form class="card card-default"  method="POST" id="cadastrarReserva"  enctype="multipart/form-data">
-    
+                    <form class="card card-default" method="POST" id="cadastrarReserva" enctype="multipart/form-data">
                         <div class="card-header">
                             <a style="margin:5px" class="btn btn-default" th:href="@{/reservas/listar}" type="button">Listar</a>
                         </div>
@@ -117,9 +116,9 @@
 </body>
 <script th:inline="javascript">
     $(function() {
-    $("#cadastrarReserva").submit(function(e) {
-        e.preventDefault();
-        $.ajax({
+        $("#cadastrarReserva").submit(function(e) {
+            e.preventDefault();
+            $.ajax({
                 url: '/reservas/cadastrar',
                 type: 'post',
                 dataType: 'application/json',
@@ -136,10 +135,12 @@
                     console.log(result)
                     $("#conteudo").html(result.Message)
                 }
+            });
         });
-
+        // Evento para redirecionar após fechar o modal
+        $('#myModal').on('hidden.bs.modal', function () {
+            window.location.href = '/reservas/listar';
+        });
     });
-
-});
 </script>
 </html>

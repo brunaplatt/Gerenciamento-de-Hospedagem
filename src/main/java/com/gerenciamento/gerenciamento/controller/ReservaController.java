@@ -110,8 +110,7 @@ public class ReservaController {
         return map;
     }
 
-
-    @GetMapping("/{id}")
+    @GetMapping("/editar/{id}")
     public ModelAndView buscarPorId(@PathVariable("id") Long id) {
         Reserva reserva = reservaService.buscarPorId(id);
         ModelAndView mv = new ModelAndView("reservas/editarReserva");
