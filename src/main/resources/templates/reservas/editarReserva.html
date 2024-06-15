@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head th:replace="~{head}"></head>
+<head th:replace="~{head}"></head>
 <body>
     <header th:replace="~{header}"></header>
     <div class="container">
-        <div class="col-12  py-md-5 bd-content">
+        <div class="col-12 py-md-5 bd-content">
             <h3 class="bd-title" id="content">Editar reserva</h3>
             <div class="br-pagebody">
                 <div class="col-12">
                     <div class="col-12 alert" style="display: none;"></div>
-                    <form class="card card-default"  method="PUT" id="editarReserva"  enctype="multipart/form-data">
-    
+                    <form class="card card-default" method="PUT" id="editarReserva" enctype="multipart/form-data">
                         <div class="card-header">
                             <a style="margin:5px" class="btn btn-default" th:href="@{/reservas/listar}" type="button">Listar</a>
                         </div>
                         <div class="card-body">
-                            <input type="hidden" class="form-control"  required name="id" th:value="${reserva.id}">
+                            <!-- Input hidden para o ID da reserva -->
+                            <input type="hidden" class="form-control" required name="id" th:value="${reserva.id}">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-select2 ">
-                                         <label>Hóspede responsável</label>
-                                         <select id="responsavel" class="form-control select2-hidden-accessible"  name="responsavel" >
+                                    <div class="form-group form-group-select2">
+                                        <label>Hóspede responsável</label>
+                                        <select id="responsavel" class="form-control select2-hidden-accessible" name="responsavel">
+                                            <!-- Opções serão preenchidas dinamicamente -->
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-select2 ">
+                                    <div class="form-group form-group-select2">
                                         <label>Quantidade de adultos (acima de 13 anos)</label>
                                         <input class="form-control" type="number" required min="1" max="3" step="1" name="adultos" th:value="${reserva.adultos}">
                                     </div>
@@ -33,15 +34,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-select2 ">
+                                    <div class="form-group form-group-select2">
                                         <label>Quantidade crianças</label>
                                         <input class="form-control" name="criancas" type="number" max="3" step="1" th:value="${reserva.criancas}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-select2 ">
+                                    <div class="form-group form-group-select2">
                                         <label>Condição de pagamento</label>
-                                        <select id="condicaoPagamento" class="form-control"  name="condicaoPagamento" >
+                                        <select id="condicaoPagamento" class="form-control" name="condicaoPagamento">
                                             <option class="optCat" value="1">A vista</option>
                                             <option class="optCat" value="2">2x no cartão</option>
                                             <option class="optCat" value="3">3x no cartão</option>
@@ -51,30 +52,30 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-select2 ">
+                                    <div class="form-group form-group-select2">
                                         <label>Data de entrada</label>
-                                        <input type="date" class="form-control"  required name="checkIn" th:value="${reserva.checkIn}">
+                                        <input type="date" class="form-control" required name="checkIn" id="checkIn" th:value="${reserva.checkIn}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-select2 ">
+                                    <div class="form-group form-group-select2">
                                         <label>Data de saída</label>
-                                        <input type="date" class="form-control"  required name="checkOut" th:value="${reserva.checkOut}">
+                                        <input type="date" class="form-control" required name="checkOut" id="checkOut" th:value="${reserva.checkOut}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-select2 ">
+                                    <div class="form-group form-group-select2">
                                         <label>Café incluso</label>
-                                        <select class="form-control"  name="cafeIncluso" id="cafeIncluso">
+                                        <select class="form-control" name="cafeIncluso" id="cafeIncluso">
                                             <option value="true">Sim</option>
                                             <option value="false">Não</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6" id="componente_cor">
-                                    <div class="form-group form-group-select2 ">
+                                    <div class="form-group form-group-select2">
                                         <label>Acomodação</label>
                                         <select id="acomodacao" class="form-control" name="acomodacao">
                                             <option class="optCor" value="1">Single (1 cama solteiro)</option>
@@ -97,61 +98,98 @@
     </div>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="myModalLabel">Retorno</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="conteudo">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
             </div>
-            <div class="modal-body" id="conteudo">
-              
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            </div>
-          </div>
         </div>
-      </div>
-      
-</body>
-<script th:inline="javascript">
-    $("[name=responsavel]").val(/*[[${reserva.responsavel}]]*/"").change();
-    if (/*[[${reserva.cafeIncluso}]]*/"" == true){
-        $("[name=cafeIncluso]").val("true").change();
-    } else {
-        $("[name=cafeIncluso]").val("false").change();
-    }
-    $("[name=acomodacao]").val(/*[[${reserva.acomodacao}]]*/"").change();
-    $("[name=condicaoPagamento]").val(/*[[${reserva.condicaoPagamento}]]*/"").change();
-    
-    $(function() {
-        $("#editarReserva").submit(function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: '/reservas/atualizar',
-                type: 'PUT',
-                dataType: 'application/json',
-                data: $("#editarReserva").serialize(),
-                success: function(data) {
-                    console.log("Deu certo")
-                    console.log(data)
-                    $('#myModal').modal('show')
-                    $("#conteudo").html(data.Message)
-                },
-                error: function(error){
-                    $('#myModal').modal('show')
-                    const result = JSON.parse(error.responseText);
-                    console.log(result)
-                    $("#conteudo").html(result.Message)
+    </div>
+
+    <!-- JavaScript para buscar e preencher o select de responsável -->
+    <script th:inline="javascript">
+        $(function() {
+            // Função para buscar os hóspedes e preencher o select
+            $.get("/hospedes/buscarHospedes", function(data) {
+                var selectResponsavel = $("#responsavel");
+                selectResponsavel.empty(); // Limpa opções existentes
+
+                // Adiciona a opção padrão
+                selectResponsavel.append('<option value="">Selecione um Hóspede</option>');
+
+                // Adiciona cada hóspede como uma opção no select
+                $.each(data, function(index, row) {
+                    selectResponsavel.append('<option value="' + row.id + '">' + row.nome + '</option>');
+                });
+
+                // Seleciona o responsável da reserva
+                selectResponsavel.val(/*[[${reserva.responsavel}]]*/"").change();
+            });
+
+            // Preenchimento do campo de café incluso
+            var cafeIncluso = /*[[${reserva.cafeIncluso}]]*/"";
+            if (cafeIncluso === true || cafeIncluso === "true") {
+                $("#cafeIncluso").val("true").change();
+            } else {
+                $("#cafeIncluso").val("false").change();
+            }
+
+            // Seleciona a acomodação da reserva
+            $("#acomodacao").val(/*[[${reserva.acomodacao}]]*/"").change();
+
+            // Seleciona a condição de pagamento da reserva
+            $("#condicaoPagamento").val(/*[[${reserva.condicaoPagamento}]]*/"").change();
+
+            // Envio do formulário de edição via AJAX com validação de datas
+            $("#editarReserva").submit(function(e) {
+                e.preventDefault();
+
+                // Validação das datas
+                var checkIn = new Date($('#checkIn').val());
+                var checkOut = new Date($('#checkOut').val());
+
+                if (checkIn >= checkOut) {
+                    $('#myModal').modal('show');
+                    $("#conteudo").html("A data de saída deve ser posterior à data de entrada.");
+                    return false; // Impede a submissão do formulário
+                }
+
+                $.ajax({
+                    url: '/reservas/atualizar',
+                    type: 'PUT',
+                    dataType: 'application/json',
+                    data: $("#editarReserva").serialize(),
+                    success: function(data) {
+                        console.log("Deu certo");
+                        console.log(data);
+                        $('#myModal').modal('show');
+                        $("#conteudo").html(data.Message);
+                    },
+                    error: function(error){
+                        $('#myModal').modal('show');
+                        const result = JSON.parse(error.responseText);
+                        console.log(result);
+                        $("#conteudo").html(result.Message);
+                    }
+                });
+            });
+
+            // Evento para redirecionar após fechar o modal somente em caso de sucesso
+            $('#myModal').on('hidden.bs.modal', function () {
+                if ($('#conteudo').text().includes('sucesso')) {
+                    window.location.href = '/reservas/listar';
                 }
             });
         });
-        // Evento para redirecionar após fechar o modal
-        $('#myModal').on('hidden.bs.modal', function () {
-            window.location.href = '/reservas/listar';
-        });
-
-    });
-</script>
+    </script>
+</body>
 </html>

@@ -62,32 +62,84 @@ public class HospedeController {
         }
     }
 
+    // @PutMapping("/atualizar")
+    // public ResponseEntity<Map<String, Object>> atualizarHospede(@Validated @RequestBody Hospede hospede, BindingResult result) {
+    //     Map<String, Object> response = new HashMap<>();
+    //     try {
+    //         Optional<Hospede> hospedeExistenteOptional = hospedeService.buscarPorId(hospede.getId());
+    //         if (hospedeExistenteOptional.isPresent()) {
+    //             Hospede hospedeExistente = hospedeExistenteOptional.get();
+    //             hospedeExistente.setNome(hospede.getNome());
+    //             hospedeExistente.setEmail(hospede.getEmail());
+    //             hospedeExistente.setTelefone(hospede.getTelefone());
+    //             // Atualize outros campos conforme necessário
+    //             hospedeService.atualizarHospede(hospedeExistente);
+    //             response.put("message", "Hóspede atualizado com sucesso");
+    //             response.put("success", "true");
+    //             return ResponseEntity.ok().body(response);
+    //         } else {
+    //             response.put("message", "Hóspede não encontrado");
+    //             response.put("success", "false");
+    //             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    //         }
+    //     } catch (Exception e) {
+    //         response.put("message", e.getMessage());
+    //         response.put("success", "false");
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    //     }
+    // }
+
     @PutMapping("/atualizar")
     public ResponseEntity<Map<String, Object>> atualizarHospede(@Validated @RequestBody Hospede hospede, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
         try {
+            if (result.hasErrors()) {
+                response.put("success", false);
+                response.put("message", "Erro de validação ao atualizar hóspede");
+                return ResponseEntity.badRequest().body(response);
+            }
+    
             Optional<Hospede> hospedeExistenteOptional = hospedeService.buscarPorId(hospede.getId());
             if (hospedeExistenteOptional.isPresent()) {
                 Hospede hospedeExistente = hospedeExistenteOptional.get();
                 hospedeExistente.setNome(hospede.getNome());
                 hospedeExistente.setEmail(hospede.getEmail());
                 hospedeExistente.setTelefone(hospede.getTelefone());
-                // Atualize outros campos conforme necessário
+                
+                // Formatar CPF para o padrão 000.000.000-00 antes de setar
+                String cpfFormatado = formatarCPF(hospede.getCpf());
+                hospedeExistente.setCpf(cpfFormatado);
+                
                 hospedeService.atualizarHospede(hospedeExistente);
                 response.put("message", "Hóspede atualizado com sucesso");
-                response.put("success", "true");
+                response.put("success", true);
                 return ResponseEntity.ok().body(response);
             } else {
                 response.put("message", "Hóspede não encontrado");
-                response.put("success", "false");
+                response.put("success", false);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         } catch (Exception e) {
-            response.put("message", e.getMessage());
-            response.put("success", "false");
+            response.put("message", "Erro ao atualizar hóspede: " + e.getMessage());
+            response.put("success", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    
+    // Método utilitário para formatar CPF no formato 000.000.000-00
+    private String formatarCPF(String cpf) {
+        // Remove caracteres não numéricos do CPF
+        String cpfLimpo = cpf.replaceAll("[^0-9]", "");
+        
+        // Formata CPF para 000.000.000-00
+        return String.format("%s.%s.%s-%s",
+            cpfLimpo.substring(0, 3),
+            cpfLimpo.substring(3, 6),
+            cpfLimpo.substring(6, 9),
+            cpfLimpo.substring(9, 11));
+    }
+    
+
 
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<?> excluirHospede(@PathVariable("id") Long id) {

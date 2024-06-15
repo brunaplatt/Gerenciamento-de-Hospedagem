@@ -71,7 +71,7 @@
     
     <script>
         function excluir(id) {
-            if(confirm("Você tem certeza que deseja excluir este hóspede?")) {
+            if(confirm("Deseja excluir este hóspede?")) {
                 $.ajax({
                     url: '/hospedes/excluir/' + id,
                     type: 'DELETE',
