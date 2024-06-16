@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head th:replace="~{head}"></head>
+<head th:replace="~{head}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
 <body>
     <header th:replace="~{header}"></header>
     <div class="container">
@@ -53,43 +57,74 @@
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="myModalLabel">Retorno</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body" id="conteudo">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="javascript:location.reload();">Fechar</button>
+                </div>
             </div>
-            <div class="modal-body" id="conteudo">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" onclick="javascript:location.reload();">Fechar</button>
-            </div>
-          </div>
         </div>
     </div>
-    
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja realmente excluir este hóspede?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function excluir(id) {
-            if(confirm("Deseja excluir este hóspede?")) {
+            // Mostra o modal de confirmação
+            $('#confirmModal').modal('show');
+
+            // Define ação para o botão de confirmação dentro do modal de confirmação
+            $('#confirmDeleteBtn').on('click', function() {
+                // Fecha o modal de confirmação
+                $('#confirmModal').modal('hide');
+
+                // Realiza a requisição AJAX para excluir o hóspede
                 $.ajax({
                     url: '/hospedes/excluir/' + id,
                     type: 'DELETE',
                     success: function(data) {
                         console.log("Deu certo");
                         console.log(data);
+                        // Exibe o modal de retorno
                         $('#myModal').modal('show');
                         $("#conteudo").html(data.message);
                     },
                     error: function(error) {
+                        console.error("Erro ao excluir hóspede:", error);
                         $('#myModal').modal('show');
                         const result = JSON.parse(error.responseText);
                         console.log(result);
                         $("#conteudo").html(result.message);
                     }
                 });
-            }
+            });
         }
+
     </script>
 </body>
 </html>

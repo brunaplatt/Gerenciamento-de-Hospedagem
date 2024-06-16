@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head th:replace="~{head}">
-
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     </head>
 <body>
     <header th:replace="~{header}"></header>
@@ -78,54 +73,83 @@
           </div>
         </div>
       </div>
+      <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja realmente excluir esta reserva?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        function excluir(id) {
+            // Mostra o modal de confirmação
+            $('#confirmModal').modal('show');
 
-<script>
-    function excluir(id){
-        if(confirm("Deseja excluir esta reserva?")) {
-            $.ajax({
-                    url: '/reservas/excluir/'+id,
+            // Define ação para o botão de confirmação dentro do modal de confirmação
+            $('#confirmDeleteBtn').on('click', function() {
+                // Fecha o modal de confirmação
+                $('#confirmModal').modal('hide');
+
+                // Realiza a requisição AJAX para excluir a reserva
+                $.ajax({
+                    url: '/reservas/excluir/' + id,
                     type: 'DELETE',
                     success: function(data) {
-                        console.log("Deu certo")
-                        console.log(data)
-                        $('#myModal').modal('show')
-                        $("#conteudo").html(data.Message)
+                        console.log("Deu certo");
+                        console.log(data);
+                        // Exibe o modal de retorno
+                        $('#myModal').modal('show');
+                        $("#conteudo").html(data.Message);
                     },
-                    error: function(error){
-                        $('#myModal').modal('show')
+                    error: function(error) {
+                        console.error("Erro ao excluir reserva:", error);
+                        $('#myModal').modal('show');
                         const result = JSON.parse(error.responseText);
-                        console.log(result)
-                        $("#conteudo").html(result.Message)
+                        console.log(result);
+                        $("#conteudo").html(result.Message);
                     }
+                });
             });
-        };
-    }
+        }
 
-    $(document).ready(function(){
-        $("[name=acomodacao]").each(function(index, element){
-            var acomodacaoValue = parseInt(element.innerHTML);
-            if (!isNaN(acomodacaoValue) && acomodacaoValue > 0){
-                switch (acomodacaoValue){
-                    case 1:
-                        element.innerHTML = "Single (1 cama solteiro)";
-                        break;
-                    case 2:
-                        element.innerHTML = "Double (2 camas solteiro)";
-                        break;
-                    case 3:
-                        element.innerHTML = "Standard (1 cama casal)";
-                        break;
-                    case 4:
-                        element.innerHTML = "Deluxe (1 cama casal com hidromassagem)";
-                        break;
-                    default:
-                        element.innerHTML = "Desconhecido";
-                        break;
+        $(document).ready(function(){
+            $("[name=acomodacao]").each(function(index, element){
+                var acomodacaoValue = parseInt(element.innerHTML);
+                if (!isNaN(acomodacaoValue) && acomodacaoValue > 0){
+                    switch (acomodacaoValue){
+                        case 1:
+                            element.innerHTML = "Single (1 cama solteiro)";
+                            break;
+                        case 2:
+                            element.innerHTML = "Double (2 camas solteiro)";
+                            break;
+                        case 3:
+                            element.innerHTML = "Standard (1 cama casal)";
+                            break;
+                        case 4:
+                            element.innerHTML = "Deluxe (1 cama casal com hidromassagem)";
+                            break;
+                        default:
+                            element.innerHTML = "Desconhecido";
+                            break;
+                    }
                 }
-            }
+            });
         });
-    });
-</script>
+    </script>
 </body>
 </html>
