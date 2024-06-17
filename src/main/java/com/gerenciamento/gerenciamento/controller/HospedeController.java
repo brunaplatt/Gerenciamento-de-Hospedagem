@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.http.HttpHeaders;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,12 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gerenciamento.gerenciamento.entity.Hospede;
-import com.gerenciamento.gerenciamento.entity.Reserva;
 import com.gerenciamento.gerenciamento.service.HospedeService;
 
 @RestController
@@ -61,33 +57,6 @@ public class HospedeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
-    // @PutMapping("/atualizar")
-    // public ResponseEntity<Map<String, Object>> atualizarHospede(@Validated @RequestBody Hospede hospede, BindingResult result) {
-    //     Map<String, Object> response = new HashMap<>();
-    //     try {
-    //         Optional<Hospede> hospedeExistenteOptional = hospedeService.buscarPorId(hospede.getId());
-    //         if (hospedeExistenteOptional.isPresent()) {
-    //             Hospede hospedeExistente = hospedeExistenteOptional.get();
-    //             hospedeExistente.setNome(hospede.getNome());
-    //             hospedeExistente.setEmail(hospede.getEmail());
-    //             hospedeExistente.setTelefone(hospede.getTelefone());
-    //             // Atualize outros campos conforme necessário
-    //             hospedeService.atualizarHospede(hospedeExistente);
-    //             response.put("message", "Hóspede atualizado com sucesso");
-    //             response.put("success", "true");
-    //             return ResponseEntity.ok().body(response);
-    //         } else {
-    //             response.put("message", "Hóspede não encontrado");
-    //             response.put("success", "false");
-    //             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    //         }
-    //     } catch (Exception e) {
-    //         response.put("message", e.getMessage());
-    //         response.put("success", "false");
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    //     }
-    // }
 
     @PutMapping("/atualizar")
     public ResponseEntity<Map<String, Object>> atualizarHospede(@Validated @RequestBody Hospede hospede, BindingResult result) {
@@ -138,8 +107,6 @@ public class HospedeController {
             cpfLimpo.substring(6, 9),
             cpfLimpo.substring(9, 11));
     }
-    
-
 
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<?> excluirHospede(@PathVariable("id") Long id) {
@@ -179,6 +146,7 @@ public class HospedeController {
     public List<Hospede> buscarHospedes(){
         return hospedeService.listarHospedes();
     }
+
     // @GetMapping("/{id}")
     // public Optional<Hospede> buscarPorId(@PathVariable Long id) {
     //     return hospedeService.buscarPorId(id);

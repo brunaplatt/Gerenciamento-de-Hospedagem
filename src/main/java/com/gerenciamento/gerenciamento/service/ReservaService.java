@@ -8,7 +8,6 @@ import com.gerenciamento.gerenciamento.repository.ReservaRepository;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReservaService {
@@ -43,12 +42,11 @@ public class ReservaService {
         return reservaRepository.findByResponsavel(responsavel);
     }
 
-    public List<Reserva> buscarPorDatas(Date checkIn, Date checkOut, Integer acomodacao){
+    public List<Reserva> buscarPorDatas(Date checkIn, Date checkOut, Integer acomodacao, Double valorTotal){
         return reservaRepository.buscaPorDatas(checkIn, checkOut, acomodacao);
     }
 
-
-    public List<Reserva> buscarPorDatasMenosUm(Date checkIn, Date checkOut, long id, Integer acomodacao){
+    public List<Reserva> buscarPorDatasMenosUm(Date checkIn, Date checkOut, long id, Integer acomodacao, Double valorTotal){
         return reservaRepository.buscarPorDatasMenosUm(checkIn, checkOut, id, acomodacao);
     }
 }

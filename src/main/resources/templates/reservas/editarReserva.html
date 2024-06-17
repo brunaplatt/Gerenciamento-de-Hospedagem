@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{head}"></head>
 <body>
     <header th:replace="~{header}"></header>
@@ -9,19 +9,19 @@
             <div class="br-pagebody">
                 <div class="col-12">
                     <div class="col-12 alert" style="display: none;"></div>
-                    <form class="card card-default" method="PUT" id="editarReserva" enctype="multipart/form-data">
+                    <form class="card card-default" method="POST" id="editarReserva" enctype="multipart/form-data">
+                        <input type="hidden" name="_method" value="PUT">
                         <div class="card-header">
                             <a style="margin:5px" class="btn btn-default" th:href="@{/reservas/listar}" type="button">Listar</a>
                         </div>
                         <div class="card-body">
-                            <!-- Input hidden para o ID da reserva -->
                             <input type="hidden" class="form-control" required name="id" th:value="${reserva.id}">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
                                         <label>Hóspede responsável</label>
-                                        <select id="responsavel" class="form-control select2-hidden-accessible" name="responsavel">
-                                            <!-- Opções serão preenchidas dinamicamente -->
+                                        <select id="responsavel" class="form-control select2-hidden-accessible" name="responsavel" th:value="${reserva.responsavel}">
+                                            <!-- Aqui será preenchido dinamicamente com JavaScript -->
                                         </select>
                                     </div>
                                 </div>
@@ -43,9 +43,9 @@
                                     <div class="form-group form-group-select2">
                                         <label>Condição de pagamento</label>
                                         <select id="condicaoPagamento" class="form-control" name="condicaoPagamento">
-                                            <option class="optCat" value="1">A vista</option>
-                                            <option class="optCat" value="2">2x no cartão</option>
-                                            <option class="optCat" value="3">3x no cartão</option>
+                                            <option value="1">A vista</option>
+                                            <option value="2">2x no cartão</option>
+                                            <option value="3">3x no cartão</option>
                                         </select>
                                     </div>
                                 </div>
@@ -54,13 +54,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
                                         <label>Data de entrada</label>
-                                        <input type="date" class="form-control" required name="checkIn" id="checkIn" th:value="${reserva.checkIn}">
+                                        <input type="date" class="form-control" required name="checkIn" id="checkIn" th:value="${#dates.format(reserva.checkIn, 'yyyy-MM-dd')}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
                                         <label>Data de saída</label>
-                                        <input type="date" class="form-control" required name="checkOut" id="checkOut" th:value="${reserva.checkOut}">
+                                        <input type="date" class="form-control" required name="checkOut" id="checkOut" th:value="${#dates.format(reserva.checkOut, 'yyyy-MM-dd')}">
                                     </div>
                                 </div>
                             </div>
@@ -74,15 +74,23 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6" id="componente_cor">
+                                <div class="col-md-6">
                                     <div class="form-group form-group-select2">
                                         <label>Acomodação</label>
                                         <select id="acomodacao" class="form-control" name="acomodacao">
-                                            <option class="optCor" value="1">Single (1 cama solteiro)</option>
-                                            <option class="optCor" value="2">Double (2 camas solteiro)</option>
-                                            <option class="optCor" value="3">Standard (1 cama casal)</option>
-                                            <option class="optCor" value="4">Deluxe (1 cama casal com hidromassagem)</option>
+                                            <option value="1">Single (1 cama solteiro)</option>
+                                            <option value="2">Double (2 camas solteiro)</option>
+                                            <option value="3">Standard (1 cama casal)</option>
+                                            <option value="4">Deluxe (1 cama casal com hidromassagem)</option>
                                         </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Valor Total R$</label>
+                                        <input type="text" class="form-control money" required name="valorTotal" id="money2" th:value="${reserva.valorTotal}" placeholder="Digite o valor total da reserva">
                                     </div>
                                 </div>
                             </div>
@@ -96,6 +104,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -105,9 +114,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" id="conteudo">
-
-                </div>
+                <div class="modal-body" id="conteudo"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                 </div>
@@ -115,26 +122,39 @@
         </div>
     </div>
 
-    <!-- JavaScript para buscar e preencher o select de responsável -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script th:inline="javascript">
         $(function() {
+            // Formata o valor inicial do input valorTotal
+            var valorInicial = /*[[${reserva.valorTotal}]]*/"";
+            if (valorInicial !== "") {
+                valorInicial = parseFloat(valorInicial).toFixed(2); // Converte para float e formata com duas casas decimais
+                $('#money2').val(valorInicial.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')); // Formata para 0.000,00
+            }
+
+            // Função para aplicar máscara de moeda
+            $('#money2').mask("#.##0,00", {reverse: true});
+    
             // Função para buscar os hóspedes e preencher o select
             $.get("/hospedes/buscarHospedes", function(data) {
                 var selectResponsavel = $("#responsavel");
                 selectResponsavel.empty(); // Limpa opções existentes
-
+    
                 // Adiciona a opção padrão
                 selectResponsavel.append('<option value="">Selecione um Hóspede</option>');
-
+    
                 // Adiciona cada hóspede como uma opção no select
                 $.each(data, function(index, row) {
                     selectResponsavel.append('<option value="' + row.id + '">' + row.nome + '</option>');
                 });
-
+    
                 // Seleciona o responsável da reserva
                 selectResponsavel.val(/*[[${reserva.responsavel}]]*/"").change();
             });
-
+    
             // Preenchimento do campo de café incluso
             var cafeIncluso = /*[[${reserva.cafeIncluso}]]*/"";
             if (cafeIncluso === true || cafeIncluso === "true") {
@@ -142,32 +162,38 @@
             } else {
                 $("#cafeIncluso").val("false").change();
             }
-
+    
             // Seleciona a acomodação da reserva
             $("#acomodacao").val(/*[[${reserva.acomodacao}]]*/"").change();
-
+    
             // Seleciona a condição de pagamento da reserva
             $("#condicaoPagamento").val(/*[[${reserva.condicaoPagamento}]]*/"").change();
-
+    
             // Envio do formulário de edição via AJAX com validação de datas
             $("#editarReserva").submit(function(e) {
                 e.preventDefault();
-
+    
                 // Validação das datas
                 var checkIn = new Date($('#checkIn').val());
                 var checkOut = new Date($('#checkOut').val());
-
+    
                 if (checkIn >= checkOut) {
                     $('#myModal').modal('show');
                     $("#conteudo").html("A data de saída deve ser posterior à data de entrada.");
                     return false; // Impede a submissão do formulário
                 }
+    
+                // Remove a máscara de moeda antes de enviar os dados
+                $('.money').each(function() {
+                    var valor = $(this).val().replace(/\./g, '').replace(',', '.'); // Remove pontos e substitui vírgula por ponto
+                    $(this).val(valor);
+                });
 
                 $.ajax({
                     url: '/reservas/atualizar',
                     type: 'PUT',
-                    dataType: 'application/json',
-                    data: $("#editarReserva").serialize(),
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: $(this).serialize(), // Serializa o formulário para URL-encoded
                     success: function(data) {
                         console.log("Deu certo");
                         console.log(data);
@@ -182,7 +208,7 @@
                     }
                 });
             });
-
+    
             // Evento para redirecionar após fechar o modal somente em caso de sucesso
             $('#myModal').on('hidden.bs.modal', function () {
                 if ($('#conteudo').text().includes('sucesso')) {

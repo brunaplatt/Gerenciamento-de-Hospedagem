@@ -38,6 +38,8 @@ public class Reserva {
 
     @NotBlank(message = "O tipo de acomodação é obrigatório")
     private Integer acomodacao;
+
+    private double valorTotal; // Adiciona a nova coluna
     
     public Reserva(){
     }
@@ -82,7 +84,6 @@ public class Reserva {
         this.responsavel = responsavel;
     }
 
-
     public Date getCheckIn() {
         return checkIn;
     }
@@ -90,7 +91,6 @@ public class Reserva {
     public void setCheckIn(Date checkIn) {
         this.checkIn = checkIn;
     }
-
 
     public Date getCheckOut() {
         return checkOut;
@@ -108,7 +108,6 @@ public class Reserva {
         this.acomodacao = acomodacao;
     }
 
-
     public boolean getCafeIncluso() {
         return cafeIncluso;
     }
@@ -116,6 +115,15 @@ public class Reserva {
     public void setCafeIncluso(boolean cafeIncluso) {
         this.cafeIncluso = cafeIncluso;
     }
+
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
     @Override
     public String toString() {
         return "hospede [id=" + id 
@@ -127,6 +135,7 @@ public class Reserva {
         + ", checkOut=" + checkOut 
         + ", acomodacao=" + acomodacao 
         + ", cafeIncluso=" + cafeIncluso 
+        + ", valorTotal=" + valorTotal 
         + "]";
     }
 }

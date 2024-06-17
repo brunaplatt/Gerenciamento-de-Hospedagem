@@ -29,6 +29,7 @@
                                         <th scope="col">Data entrada</th>
                                         <th scope="col">Data saída</th>
                                         <th scope="col">Acomodação</th>
+                                        <th scope="col">Valor Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,6 +46,7 @@
                                         <td th:text="${reserva.checkIn}"></td>
                                         <td th:text="${reserva.checkOut}"></td>
                                         <td th:text="${reserva.acomodacao}" name="acomodacao"></td>
+                                        <td class="valor-total" th:data-valor-total="${reserva.valorTotal}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -57,22 +59,20 @@
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="myModalLabel">Retorno</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="conteudo"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="javascript:location.reload();">Fechar</button>
+                </div>
             </div>
-            <div class="modal-body" id="conteudo">
-              
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" onclick="javascript:location.reload();">Fechar</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
       <!-- Modal de Confirmação de Exclusão -->
     <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -147,6 +147,13 @@
                             element.innerHTML = "Desconhecido";
                             break;
                     }
+                }
+            });
+             // Formatar valores totais
+             $(".valor-total").each(function(index, element){
+                var valorTotal = parseFloat($(element).data("valor-total"));
+                if (!isNaN(valorTotal)){
+                    $(element).text(valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
                 }
             });
         });

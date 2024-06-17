@@ -18,7 +18,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
                                         <label>Hóspede responsável</label>
-                                        <select id="responsavel" class="form-control select2-hidden-accessible" name="responsavel">
+                                        <select id="responsavel" class="form-control select2-hidden-accessible" name="responsavel" required>
                                             <option value="">Selecione um Hóspede</option>
                                         </select>
                                     </div>
@@ -26,7 +26,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
                                         <label>Quantidade de adultos (acima de 13 anos)</label>
-                                        <input class="form-control" type="number" required name="adultos" min="1" max="3" step="1" value="1">
+                                        <input id="adultos" class="form-control" type="number" required name="adultos" min="1" max="3" step="1" value="1">
                                     </div>
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
                                         <label>Quantidade crianças</label>
-                                        <input class="form-control" name="criancas" type="number" max="3" step="1" value="0">
+                                        <input id="criancas" class="form-control" name="criancas" type="number" max="3" step="1" value="0">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -84,6 +84,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Valor Total R$</label>
+                                        <input type="text" class="form-control money" required name="valorTotal" id="money2" placeholder="Digite o valor total da reserva">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="row justify-content-center"></div>
@@ -111,26 +119,24 @@
         </div>
     </div>
 
-    <!-- JavaScript para buscar e preencher o select de responsável -->
-    <script th:inline="javascript">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
         $(function() {
-            // Executa a requisição para buscar os hóspedes
-            $.get("/hospedes/buscarHospedes", function(data) {
-                var selectResponsavel = $("#responsavel");
-                selectResponsavel.empty(); // Limpa opções existentes
-
-                // Adiciona a opção padrão
-                selectResponsavel.append('<option value="">Selecione um Hóspede</option>');
-
-                // Adiciona cada hóspede como uma opção no select
-                $.each(data, function(index, row) {
-                    selectResponsavel.append('<option value="' + row.id + '">' + row.nome + '</option>');
-                });
-            });
+            // Função para aplicar máscara de moeda
+            $('#money2').mask("#.##0,00", {reverse: true});
 
             // Submissão do formulário via AJAX
             $("#cadastrarReserva").submit(function(e) {
                 e.preventDefault();
+
+                // Validação do campo responsável
+                if ($("#responsavel").val() === "") {
+                    $('#myModal').modal('show');
+                    $("#conteudo").html("O campo 'Hóspede responsável' é obrigatório.");
+                    return false; // Impede a submissão do formulário
+                }
 
                 // Validação das datas
                 var checkIn = new Date($('#checkIn').val());
@@ -142,31 +148,70 @@
                     return false; // Impede a submissão do formulário
                 }
 
+                // Remover a máscara de moeda antes de enviar os dados
+                var valorTotal = $("#money2").val(); // Usar o seletor correto para o campo de valor total
+
+                // Verificar se o campo foi encontrado
+                if (valorTotal === undefined) {
+                    $('#myModal').modal('show');
+                    $("#conteudo").html("Erro ao acessar o campo 'Valor Total'.");
+                    return false; // Impede a submissão do formulário
+                }
+
+                // Remover caracteres não numéricos e converter para double
+                valorTotal = parseFloat(valorTotal.replace(/[^\d,]/g, '').replace(',', '.'));
+
+                // Enviar dados via AJAX
                 $.ajax({
                     url: '/reservas/cadastrar',
                     type: 'post',
-                    dataType: 'application/json',
-                    data: $("#cadastrarReserva").serialize(),
+                    dataType: 'json', // Assumindo que o servidor retorna JSON
+                    data: {
+                        responsavel: $("#responsavel").val(),
+                        adultos: $("#adultos").val(),
+                        criancas: $("#criancas").val(),
+                        condicaoPagamento: $("#condicaoPagamento").val(),
+                        checkIn: $('#checkIn').val(),
+                        checkOut: $('#checkOut').val(),
+                        cafeIncluso: $('#cafeIncluso').val(),
+                        acomodacao: $('#acomodacao').val(),
+                        valorTotal: valorTotal
+                    },
                     success: function(data) {
                         console.log("Deu certo");
                         console.log(data);
                         $('#myModal').modal('show');
-                        $("#conteudo").html(data.Message);
+                        $("#conteudo").html(data.Message); // Supondo que o servidor retorna uma mensagem com 'message'
                     },
-                    error: function(error){
+                    error: function(error) {
+                        console.error("Erro ao cadastrar reserva:", error);
                         $('#myModal').modal('show');
                         const result = JSON.parse(error.responseText);
                         console.log(result);
-                        $("#conteudo").html(result.Message);
+                        $("#conteudo").html(result.Message); // Exibindo mensagem de erro do servidor
                     }
                 });
             });
 
             // Evento para redirecionar após fechar o modal somente em caso de sucesso
-            $('#myModal').on('hidden.bs.modal', function () {
+            $('#myModal').on('hidden.bs.modal', function() {
                 if ($('#conteudo').text().includes('sucesso')) {
                     window.location.href = '/reservas/listar';
                 }
+            });
+
+            // Carregar lista de hóspedes no select
+            $.get("/hospedes/buscarHospedes", function(data) {
+                var selectResponsavel = $("#responsavel");
+                selectResponsavel.empty(); // Limpa opções existentes
+
+                // Adiciona a opção padrão
+                selectResponsavel.append('<option value="">Selecione um Hóspede</option>');
+
+                // Adiciona cada hóspede como uma opção no select
+                $.each(data, function(index, row) {
+                    selectResponsavel.append('<option value="' + row.id + '">' + row.nome + '</option>');
+                });
             });
         });
     </script>
