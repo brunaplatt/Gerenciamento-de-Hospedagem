@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="pt-br">
 <head th:replace="~{head}"></head>
 <body>
@@ -212,6 +212,310 @@
                 $.each(data, function(index, row) {
                     selectResponsavel.append('<option value="' + row.id + '">' + row.nome + '</option>');
                 });
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head th:replace="~{head}"></head>
+<body>
+    <header th:replace="~{header}"></header>
+    <div class="container">
+        <div class="col-12 py-md-5 bd-content">
+            <h3 class="bd-title" id="content">Cadastrar Reserva</h3>
+            <div class="br-pagebody">
+                <div class="col-12">
+                    <div class="col-12 alert" style="display: none;"></div>
+                    <form class="card card-default" method="POST" id="cadastrarReserva" enctype="multipart/form-data">
+                        <div class="card-header">
+                            <a style="margin:5px" class="btn btn-default" th:href="@{/reservas/listar}" type="button">Listar</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Hóspede responsável</label>
+                                        <select id="responsavel" class="form-control select2-hidden-accessible" name="responsavel" required>
+                                            <option value="">Selecione um Hóspede</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Quantidade de adultos (acima de 13 anos)</label>
+                                        <input id="adultos" class="form-control" type="number" required name="adultos" min="1" max="3" step="1" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Quantidade crianças</label>
+                                        <input id="criancas" class="form-control" name="criancas" type="number" max="3" step="1" value="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Condição de pagamento</label>
+                                        <select id="condicaoPagamento" class="form-control" name="condicaoPagamento">
+                                            <option class="optCat" value="1">A vista</option>
+                                            <option class="optCat" value="2">2x no cartão</option>
+                                            <option class="optCat" value="3">3x no cartão</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Data de entrada</label>
+                                        <input type="date" class="form-control" required name="checkIn" id="checkIn">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Data de saída</label>
+                                        <input type="date" class="form-control" required name="checkOut" id="checkOut">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Café incluso</label>
+                                        <select class="form-control" name="cafeIncluso" id="cafeIncluso">
+                                            <option value="true">Sim</option>
+                                            <option value="false">Não</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="componente_cor">
+                                    <div class="form-group form-group-select2">
+                                        <label>Acomodação</label>
+                                        <select id="acomodacao" class="form-control" name="acomodacao">
+                                            <option class="optCor" value="1">Single (1 cama solteiro)</option>
+                                            <option class="optCor" value="2">Double (2 camas solteiro)</option>
+                                            <option class="optCor" value="3">Standard (1 cama casal)</option>
+                                            <option class="optCor" value="4">Deluxe (1 cama casal com hidromassagem)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label>Valor Total R$</label>
+                                        <input type="text" class="form-control money" readonly required name="valorTotal" id="money2" placeholder="R$ 0.00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row justify-content-center"></div>
+                            <button style="margin:5px" class="btn btn-success">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="conteudo"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(function() {
+            // Aplicar máscara de moeda ao campo de Valor Total
+            $('#money2').mask("#.##0,00", {reverse: true});
+
+            // Função para calcular o valor total baseado na acomodação e nas datas selecionadas
+            function calcularValorTotal() {
+                var checkInVal = $('#checkIn').val();
+                var checkOutVal = $('#checkOut').val();
+
+                // Verificar se ambas as datas estão preenchidas
+                if (checkInVal && checkOutVal) {
+                    var valorDiaria = 0;
+                    var checkIn = new Date(checkInVal);
+                    var checkOut = new Date(checkOutVal);
+                    var diffTime = Math.abs(checkOut - checkIn);
+                    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    // Determinar o valor da diária baseado na acomodação selecionada
+                    switch ($('#acomodacao').val()) {
+                        case '1':
+                            valorDiaria = 100; // Valor para Single (1 cama solteiro)
+                            break;
+                        case '2':
+                            valorDiaria = 120; // Valor para Double (2 camas solteiro)
+                            break;
+                        case '3':
+                            valorDiaria = 150; // Valor para Standard (1 cama casal)
+                            break;
+                        case '4':
+                            valorDiaria = 200; // Valor para Deluxe (1 cama casal com hidromassagem)
+                            break;
+                        default:
+                            valorDiaria = 0;
+                            break;
+                    }
+
+                    var valorTotal = valorDiaria * diffDays;
+
+                    // Formatando o valor total para exibição
+                    $("#money2").val(valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+                } else {
+                    // Se não houver ambas as datas selecionadas, limpar o campo de Valor Total
+                    $("#money2").val('');
+                }
+            }
+
+            // Evento para chamar a função calcularValorTotal() quando as datas forem alteradas
+            $('#checkIn, #checkOut').change(function() {
+                calcularValorTotal();
+            });
+
+            // Evento para chamar a função calcularValorTotal() quando a acomodação for alterada
+            $('#acomodacao').change(function() {
+                calcularValorTotal();
+            });
+
+            // Função para riscar datas anteriores ao dia atual
+            function riscarDatasAnteriores() {
+                var hoje = new Date();
+                var dd = hoje.getDate();
+                var mm = hoje.getMonth() + 1; // Janeiro é 0
+                var yyyy = hoje.getFullYear();
+
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+
+                var dataHoje = yyyy + '-' + mm + '-' + dd;
+
+                // Definir estilo CSS para riscar datas anteriores no campo check-in
+                $('#checkIn').attr('min', dataHoje);
+
+                // Definir estilo CSS para riscar datas anteriores no campo check-out
+                $('#checkOut').attr('min', dataHoje);
+            }
+
+            // Evento para chamar a função riscarDatasAnteriores() ao carregar a página
+            riscarDatasAnteriores();
+
+            // Evento para chamar a função calcularValorTotal() quando as datas forem alteradas
+            $('#checkIn, #checkOut').change(function() {
+                calcularValorTotal();
+            });
+
+            // Submissão do formulário via AJAX
+            $("#cadastrarReserva").submit(function(e) {
+                e.preventDefault();
+
+                // Validação do campo responsável
+                if ($("#responsavel").val() === "") {
+                    $('#myModal').modal('show');
+                    $("#conteudo").html("O campo 'Hóspede responsável' é obrigatório.");
+                    return false; // Impede a submissão do formulário
+                }
+
+                // Validação das datas
+                var checkIn = new Date($('#checkIn').val());
+                var checkOut = new Date($('#checkOut').val());
+
+                if (checkIn >= checkOut) {
+                    $('#myModal').modal('show');
+                    $("#conteudo").html("A data de saída deve ser posterior à data de entrada.");
+                    return false; // Impede a submissão do formulário
+                }
+
+                // Remover a máscara de moeda antes de enviar os dados
+                var valorTotal = $("#money2").val(); // Usar o seletor correto para o campo de valor total
+
+                // Verificar se o campo foi encontrado
+                if (valorTotal === undefined) {
+                    $('#myModal').modal('show');
+                    $("#conteudo").html("Erro ao acessar o campo 'Valor Total'.");
+                    return false; // Impede a submissão do formulário
+                }
+
+                // Remover caracteres não numéricos e converter para double
+                valorTotal = parseFloat(valorTotal.replace(/[^\d,]/g, '').replace(',', '.'));
+
+                // Enviar dados via AJAX
+                $.ajax({
+                    url: '/reservas/cadastrar',
+                    type: 'post',
+                    dataType: 'json', // Assumindo que o servidor retorna JSON
+                    data: {
+                        responsavel: $("#responsavel").val(),
+                        adultos: $("#adultos").val(),
+                        criancas: $("#criancas").val(),
+                        condicaoPagamento: $("#condicaoPagamento").val(),
+                        checkIn: $('#checkIn').val(),
+                        checkOut: $('#checkOut').val(),
+                        cafeIncluso: $('#cafeIncluso').val(),
+                        acomodacao: $('#acomodacao').val(),
+                        valorTotal: valorTotal
+                    },
+                    success: function(data) {
+                        console.log("Deu certo");
+                        console.log(data);
+                        $('#myModal').modal('show');
+                        $("#conteudo").html(data.Message); // Supondo que o servidor retorna uma mensagem com 'message'
+                    },
+                    error: function(error) {
+                        console.error("Erro ao cadastrar reserva:", error);
+                        $('#myModal').modal('show');
+                        const result = JSON.parse(error.responseText);
+                        console.log(result);
+                        $("#conteudo").html(result.Message); // Exibindo mensagem de erro do servidor
+                    }
+                });
+            });
+
+            // Carregar lista de hóspedes no select
+            $.get("/hospedes/buscarHospedes", function(data) {
+                var selectResponsavel = $("#responsavel");
+                selectResponsavel.empty(); // Limpa opções existentes
+
+                // Adiciona a opção padrão
+                selectResponsavel.append('<option value="">Selecione um Hóspede</option>');
+
+                // Adiciona cada hóspede como uma opção no select
+                $.each(data, function(index, row) {
+                    selectResponsavel.append('<option value="' + row.id + '">' + row.nome + '</option>');
+                });
+            });
+
+            // Evento para redirecionar após fechar o modal somente em caso de sucesso
+            $('#myModal').on('hidden.bs.modal', function() {
+                if ($('#conteudo').text().includes('sucesso')) {
+                    window.location.href = '/reservas/listar';
+                }
             });
         });
     </script>
