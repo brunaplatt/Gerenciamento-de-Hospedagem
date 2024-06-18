@@ -300,10 +300,12 @@
                                     <div class="form-group form-group-select2">
                                         <label>Acomodação</label>
                                         <select id="acomodacao" class="form-control" name="acomodacao">
-                                            <option class="optCor" value="1">Single (1 cama solteiro)</option>
-                                            <option class="optCor" value="2">Double (2 camas solteiro)</option>
-                                            <option class="optCor" value="3">Standard (1 cama casal)</option>
-                                            <option class="optCor" value="4">Deluxe (1 cama casal com hidromassagem)</option>
+                                            <option class="optCor" value="1">Domo (1 cama casal)</option>
+                                            <option class="optCor" value="2">Charrua BUS (1 cama casal)</option>
+                                            <option class="optCor" value="3">Suíte com Cozinha (1 cama casal + 1 cama solteiro)</option>
+                                            <option class="optCor" value="4">Chalé Família (2 cama casal + 1 cama solteiro)</option>
+                                            <option class="optCor" value="5">Cabana (1 cama casal + 1 cama solteiro)</option>
+                                            <option class="optCor" value="6">Estacionamento para Overlanders</option>
                                         </select>
                                     </div>
                                 </div>
@@ -366,16 +368,22 @@
                     // Determinar o valor da diária baseado na acomodação selecionada
                     switch ($('#acomodacao').val()) {
                         case '1':
-                            valorDiaria = 100; // Valor para Single (1 cama solteiro)
+                            valorDiaria = 590; // Domo (1 cama casal)
                             break;
                         case '2':
-                            valorDiaria = 120; // Valor para Double (2 camas solteiro)
+                            valorDiaria = 490; // Charrua BUS (1 cama casal)
                             break;
                         case '3':
-                            valorDiaria = 150; // Valor para Standard (1 cama casal)
+                            valorDiaria = 390; // Suíte com Cozinha (1 cama casal + 1 cama solteiro)
                             break;
                         case '4':
-                            valorDiaria = 200; // Valor para Deluxe (1 cama casal com hidromassagem)
+                            valorDiaria = 590; // Chalé Família (2 cama casal + 1 cama solteiro)
+                            break;
+                        case '5':
+                            valorDiaria = 490; // Cabana (1 cama casal + 1 cama solteiro)
+                            break;
+                        case '6':
+                            valorDiaria = 100; // Estacionamento para Overlanders
                             break;
                         default:
                             valorDiaria = 0;
