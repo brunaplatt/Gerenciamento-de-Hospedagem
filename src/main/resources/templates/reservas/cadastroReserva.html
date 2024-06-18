@@ -220,7 +220,11 @@
 
 <!DOCTYPE html>
 <html lang="pt-br">
-<head th:replace="~{head}"></head>
+<head th:replace="~{head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
 <body>
     <header th:replace="~{header}"></header>
     <div class="container">
@@ -245,7 +249,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
-                                        <label>Quantidade de adultos (acima de 13 anos)</label>
+                                        <label>Quantidade de adultos</label>
                                         <input id="adultos" class="form-control" type="number" required name="adultos" min="1" max="3" step="1" value="1">
                                     </div>
                                 </div>
@@ -307,8 +311,12 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group form-group-select2">
-                                        <label>Valor Total R$</label>
-                                        <input type="text" class="form-control money" readonly required name="valorTotal" id="money2" placeholder="R$ 0.00">
+                                        <div style="display: flex; align-items: center;">
+                                            <span style="margin-right: 5px; font-size: 1.5em;">Valor Total:</span>
+                                            <span id="valorTotal" class="money" style="margin-left: 10px; font-size: 1.5em;">R$ 0.00</span>
+                                        </div>
+                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -339,14 +347,9 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         $(function() {
-            // Aplicar máscara de moeda ao campo de Valor Total
-            $('#money2').mask("#.##0,00", {reverse: true});
-
             // Função para calcular o valor total baseado na acomodação e nas datas selecionadas
             function calcularValorTotal() {
                 var checkInVal = $('#checkIn').val();
@@ -382,10 +385,10 @@
                     var valorTotal = valorDiaria * diffDays;
 
                     // Formatando o valor total para exibição
-                    $("#money2").val(valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+                    $("#valorTotal").text(valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
                 } else {
                     // Se não houver ambas as datas selecionadas, limpar o campo de Valor Total
-                    $("#money2").val('');
+                    $("#valorTotal").text('R$ 0.00');
                 }
             }
 
@@ -426,11 +429,6 @@
             // Evento para chamar a função riscarDatasAnteriores() ao carregar a página
             riscarDatasAnteriores();
 
-            // Evento para chamar a função calcularValorTotal() quando as datas forem alteradas
-            $('#checkIn, #checkOut').change(function() {
-                calcularValorTotal();
-            });
-
             // Submissão do formulário via AJAX
             $("#cadastrarReserva").submit(function(e) {
                 e.preventDefault();
@@ -452,20 +450,8 @@
                     return false; // Impede a submissão do formulário
                 }
 
-                // Remover a máscara de moeda antes de enviar os dados
-                var valorTotal = $("#money2").val(); // Usar o seletor correto para o campo de valor total
+                var valorTotal = $('#valorTotal').text().replace('R$', '').replace('.', '').replace(',', '.').trim();
 
-                // Verificar se o campo foi encontrado
-                if (valorTotal === undefined) {
-                    $('#myModal').modal('show');
-                    $("#conteudo").html("Erro ao acessar o campo 'Valor Total'.");
-                    return false; // Impede a submissão do formulário
-                }
-
-                // Remover caracteres não numéricos e converter para double
-                valorTotal = parseFloat(valorTotal.replace(/[^\d,]/g, '').replace(',', '.'));
-
-                // Enviar dados via AJAX
                 $.ajax({
                     url: '/reservas/cadastrar',
                     type: 'post',
