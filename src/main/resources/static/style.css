@@ -285,6 +285,13 @@ b {
     display: block;
 }
 
+.fixed-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
 .link-user:hover .nav {
     display: block;
 }
