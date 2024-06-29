@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
     <head th:replace="~{head}">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -43,12 +43,193 @@
                                             </a>
                                         </td>
                                         <th scope="row" th:text="${reserva.nomeResponsavel}"></th>
+                                        <td th:text="${#dates.format(reserva.checkIn, 'dd/MM/yyyy')}"></td>
+                                        <td th:text="${#dates.format(reserva.checkOut, 'dd/MM/yyyy')}"></td>
+                                        <td th:text="${reserva.acomodacao}" name="acomodacao"></td>
+                                        <td class="valor-total" th:data-valor-total="${reserva.valorTotal}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Retorno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="conteudo"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="javascript:location.reload();">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Deseja realmente excluir esta reserva?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function excluir(id) {
+            // Mostra o modal de confirmação
+            $('#confirmModal').modal('show');
+
+            // Define ação para o botão de confirmação dentro do modal de confirmação
+            $('#confirmDeleteBtn').on('click', function() {
+                // Fecha o modal de confirmação
+                $('#confirmModal').modal('hide');
+
+                // Realiza a requisição AJAX para excluir a reserva
+                $.ajax({
+                    url: '/reservas/excluir/' + id,
+                    type: 'DELETE',
+                    success: function(data) {
+                        console.log("Deu certo");
+                        console.log(data);
+                        // Exibe o modal de retorno
+                        $('#myModal').modal('show');
+                        $("#conteudo").html(data.Message);
+                    },
+                    error: function(error) {
+                        console.error("Erro ao excluir reserva:", error);
+                        $('#myModal').modal('show');
+                        const result = JSON.parse(error.responseText);
+                        console.log(result);
+                        $("#conteudo").html(result.Message);
+                    }
+                });
+            });
+        }
+
+        $(document).ready(function(){
+            $("[name=acomodacao]").each(function(index, element){
+                var acomodacaoValue = parseInt(element.innerHTML);
+                if (!isNaN(acomodacaoValue) && acomodacaoValue > 0){
+                    switch (acomodacaoValue){
+                        case 1:
+                            element.innerHTML = "Domo (1 cama casal)";
+                            break;
+                        case 2:
+                            element.innerHTML = "Charrua BUS (1 cama casal)";
+                            break;
+                        case 3:
+                            element.innerHTML = "Suíte com Cozinha (1 cama casal + 1 cama solteiro)";
+                            break;
+                        case 4:
+                            element.innerHTML = "Chalé Família (2 cama casal + 1 cama solteiro)";
+                            break;
+                        case 5:
+                            element.innerHTML = "Cabana (1 cama casal + 1 cama solteiro)";
+                            break;
+                        case 6:
+                            element.innerHTML = "Estacionamento para Overlanders";
+                            break;
+                        default:
+                            element.innerHTML = "Desconhecido";
+                            break;
+                    }
+                }
+            });
+             // Formatar valores totais
+             $(".valor-total").each(function(index, element){
+                var valorTotal = parseFloat($(element).data("valor-total"));
+                if (!isNaN(valorTotal)){
+                    $(element).text(valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+                }
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head th:replace="~{head}">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </head>
+<body>
+    <header th:replace="~{header}"></header>
+    <div class="container">
+        <div class="col-12  py-md-5 bd-content">
+            <h3 class="bd-title" id="content">Listar Reservas</h3>
+            <div class="br-pagebody">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-tools" style="float:left">
+    
+                            <a style="margin:5px" class="btn btn-success" th:href="@{/reservas/adicionar}" type="button">Inserir</a>
+    
+                        </div>
+                    </div>
+                    <div class="bd  bd-gray-300 rounded">
+                        <div class="table-responsive">
+                            <table class="table mg-b-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Responsavel</th>
+                                        <th scope="col">Data entrada</th>
+                                        <th scope="col">Data saída</th>
+                                        <th scope="col">Acomodação</th>
+                                        <th scope="col">Valor Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="reserva : ${listaReserva}">
+                                        <!-- <td>
+                                            <a class="btn btn-primary btn-sm" th:href="@{'/reservas/editar/' +${reserva.id}}">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-sm button-alert" th:onclick="'excluir(\'' + ${reserva.id} + '\')'">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td> -->
+                                        <td>
+                                            <div class="d-flex justify-content-start">
+                                                <a class="btn btn-primary btn-sm mr-1" th:href="@{'/reservas/editar/' + ${reserva.id}}">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
+                                                <a class="btn btn-danger btn-sm button-alert" th:onclick="'excluir(\'' + ${reserva.id} + '\')'">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        
+                                        <th scope="row" width="20%" th:text="${reserva.nomeResponsavel}"></th>
                                         <!-- <td th:text="${reserva.checkIn}"></td> -->
                                         <td th:text="${#dates.format(reserva.checkIn, 'dd/MM/yyyy')}"></td>
                                         <!-- <td th:text="${reserva.checkOut}"></td> -->
                                         <td th:text="${#dates.format(reserva.checkOut, 'dd/MM/yyyy')}"></td>
                                         <td th:text="${reserva.acomodacao}" name="acomodacao"></td>
                                         <td class="valor-total" th:data-valor-total="${reserva.valorTotal}"></td>
+                                        <td class="imagem-acomodacao"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -156,6 +337,38 @@
                             break;
                     }
                 }
+            });
+
+             // Adicionar imagens das acomodações
+             $(".imagem-acomodacao").each(function(index, element){
+                var acomodacaoValue = $(element).siblings("[name=acomodacao]").text();
+                var imageUrl = "";
+                
+                switch (acomodacaoValue) {
+                    case "Domo (1 cama casal)":
+                        imageUrl = "https://static.wixstatic.com/media/b87f83_0db328063a8c4b4ea1bb3dff437e8e46~mv2.jpeg/v1/fill/w_240,h_170,q_85,usm_0.66_1.00_0.01/b87f83_0db328063a8c4b4ea1bb3dff437e8e46~mv2.jpeg";
+                        break;
+                    case "Charrua BUS (1 cama casal)":
+                        imageUrl = "https://static.wixstatic.com/media/b87f83_5580c08771c841089ccc440a82c2f298~mv2.jpeg/v1/fill/w_240,h_170,q_85,usm_0.66_1.00_0.01/b87f83_5580c08771c841089ccc440a82c2f298~mv2.jpeg";
+                        break;
+                    case "Suíte com Cozinha (1 cama casal + 1 cama solteiro)":
+                        imageUrl = "https://static.wixstatic.com/media/b87f83_bfc66e6435f34c23bfd60e2fccb3d499~mv2.jpg/v1/fill/w_240,h_170,q_85,usm_0.66_1.00_0.01/b87f83_bfc66e6435f34c23bfd60e2fccb3d499~mv2.jpg";
+                        break;
+                    case "Chalé Família (2 cama casal + 1 cama solteiro)":
+                        imageUrl = "https://static.wixstatic.com/media/b87f83_d943676e56f24781b4aad20256b75eef~mv2.jpg/v1/fill/w_240,h_170,q_85,usm_0.66_1.00_0.01/b87f83_d943676e56f24781b4aad20256b75eef~mv2.jpg";
+                        break;
+                    case "Cabana (1 cama casal + 1 cama solteiro)":
+                        imageUrl = "https://static.wixstatic.com/media/b87f83_23a56936773e4f7f812d0543c078138c~mv2.jpg/v1/fill/w_240,h_170,q_85,usm_0.66_1.00_0.01/b87f83_23a56936773e4f7f812d0543c078138c~mv2.jpg";
+                        break;
+                    case "Estacionamento para Overlanders":
+                        imageUrl = "https://static.wixstatic.com/media/b87f83_f4b318355c704575a4a6917c1a2f7401~mv2.jpg/v1/fill/w_240,h_170,q_85,usm_0.66_1.00_0.01/b87f83_f4b318355c704575a4a6917c1a2f7401~mv2.jpg";
+                        break;
+                    default:
+                        imageUrl = "https://example.com/desconhecido.jpg";
+                        break;
+                }
+                
+                $(element).html('<img src="' + imageUrl + '" alt="' + acomodacaoValue + '" style="width: 100px; height: auto;">');
             });
              // Formatar valores totais
              $(".valor-total").each(function(index, element){
