@@ -26,34 +26,3 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Object[]> listaReservas();
 
 }
-
-
-
-
-
-
-// package com.gerenciamento.gerenciamento.repository;
-
-// import org.springframework.data.jpa.repository.JpaRepository;
-// import org.springframework.data.jpa.repository.Query;
-// import org.springframework.stereotype.Repository;
-
-// import com.gerenciamento.gerenciamento.entity.Reserva;
-
-// import java.sql.Date;
-// import java.util.List;
-
-// @Repository
-// public interface ReservaRepository extends JpaRepository<Reserva, Long> {
-
-//     List<Reserva> findByResponsavel(long responsavel);
-
-//     @Query("SELECT k FROM Reserva k WHERE ((k.checkIn <= ?2 AND k.checkOut >= ?2) OR (k.checkIn <= ?1 AND k.checkOut >= ?1)) AND k.acomodacao = ?3")
-//     List<Reserva> buscaPorDatas(Date checkIn, Date checkOut, Integer acomodacao);
-
-//     @Query("SELECT k FROM Reserva k WHERE k.id <> ?3 AND ((k.checkIn <= ?2 AND k.checkOut >= ?2) OR (k.checkIn <= ?1 AND k.checkOut >= ?1)) AND k.acomodacao = ?4")
-//     List<Reserva> buscarPorDatasMenosUm(Date checkIn, Date checkOut, long id, Integer acomodacao);
-
-//     @Query(value = "SELECT r.acomodacao, r.check_in, r.check_out, h.nome AS responsavelNome, r.valor_total FROM Reserva r INNER JOIN Hospede h ON h.id = r.responsavel ORDER BY r.id DESC", nativeQuery = true)
-//     List<Object[]> listaReservas();
-// }
